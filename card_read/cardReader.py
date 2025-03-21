@@ -5,7 +5,7 @@ reader = ocr.Reader(['en'],gpu=False) # this needs to run only once to load the 
 
 
 
-def draw_bounding_boxes(image, detections, threshold=0.25):
+def draw_bounding_boxes(image,original, detections, threshold=0.25):
 
     words = []
 
@@ -13,20 +13,18 @@ def draw_bounding_boxes(image, detections, threshold=0.25):
 
         if score > threshold:
 
-            cv.rectangle(image, tuple(map(int, bbox[0])), tuple(map(int, bbox[2])), (0, 255, 0), 5)
+            cv.rectangle(original, tuple(map(int, bbox[0])), tuple(map(int, bbox[2])), (0, 255, 0), 5)
 
-            cv.putText(image, text, tuple(map(int, bbox[0])), cv.FONT_HERSHEY_COMPLEX_SMALL, 0.65, (255, 0, 0), 2)
+            cv.putText(original, text, tuple(map(int, bbox[0])), cv.FONT_HERSHEY_COMPLEX_SMALL, 0.65, (255, 0, 0), 2)
             words.append(text)
 
     return words
 
 
-def prepareImage(img, type):
+def prepareImage(img, type,):
 
     if img is None:
         raise ValueError("The input image is None. Please check the file path or image loading process.")
-
-    img = cv.resize(img,(int(img.shape[1]*0.75),int(img.shape[0]*0.75)),interpolation=cv.INTER_AREA)
     
     grey = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 
@@ -48,15 +46,20 @@ def prepareImage(img, type):
 #Type 0 for magic, 1 for pokemon, 2 for yugi
 #If not correct type error may happen 
 def readCard(card, type, treshold = 0.25):
-
+    
     img = cv.imread(card)
+
+    if img is None:
+        raise ValueError("The input image is None. Please check the file path or image loading process.")
+
+    img = cv.resize(img,(int(img.shape[1]*0.75),int(img.shape[0]*0.75)),interpolation=cv.INTER_AREA)
+    
+
+    original = img.copy()
 
     preparedImage, detections = prepareImage (img, type)
 
-    result = (draw_bounding_boxes(preparedImage, detections, treshold),preparedImage)
+    result = (draw_bounding_boxes(preparedImage,original, detections, treshold),original)
 
     return result
-
-
-
 
