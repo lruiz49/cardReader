@@ -5,7 +5,7 @@ reader = ocr.Reader(['en'],gpu=False) # this needs to run only once to load the 
 
 
 
-def draw_bounding_boxes(image,original, detections, threshold=0.25):
+def draw_bounding_boxes(original, detections, threshold=0.25):
 
     words = []
 
@@ -21,7 +21,7 @@ def draw_bounding_boxes(image,original, detections, threshold=0.25):
     return words
 
 
-def prepareImage(img, type,):
+def prepareImage(img, type):
 
     if img is None:
         raise ValueError("The input image is None. Please check the file path or image loading process.")
@@ -59,7 +59,7 @@ def readCard(card, type, treshold = 0.25):
 
     preparedImage, detections = prepareImage (img, type)
 
-    result = (draw_bounding_boxes(preparedImage,original, detections, treshold),original)
+    result = (draw_bounding_boxes(original, detections, treshold),original)
 
     return result
 
