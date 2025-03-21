@@ -5,8 +5,8 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     install_requires=[
-        '<cv2>',
-        '<easyocr>'
+        'opencv-python',
+        'easyocr'
     ],
     author='Lucas',  
     author_email='*****',
